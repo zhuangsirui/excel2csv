@@ -21,7 +21,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
-	app.Version = "0.0.1"
+	app.Version = "0.0.2"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",
@@ -31,7 +31,7 @@ func main() {
 		},
 		cli.BoolFlag{
 			Name:        "trim-float",
-			Usage:       "try to parse string like `1.10000000000001` to `1.1`",
+			Usage:       "try to parse string like 1.10000000000001 to 1.1",
 			Destination: &trimFloat,
 		},
 	}

@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	output    string
-	trimFloat bool
+	output             string
+	trimFloat, withBom bool
 )
 
 func main() {
@@ -34,6 +34,11 @@ func main() {
 			Name:        "trim-float",
 			Usage:       "try to parse string like 1.10000000000001 to 1.1",
 			Destination: &trimFloat,
+		},
+		cli.BoolFlag{
+			Name:        "with-bom",
+			Usage:       "add UTF-8 BOM to csv file",
+			Destination: &withBom,
 		},
 	}
 	app.Action = convert
@@ -77,6 +82,12 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 	}
 	defer f.Close()
 	log.Printf("convert %s into %s", sheet.Name, csvPath)
+	if withBom {
+		_, err := f.Write(bomBytes)
+		if err != nil {
+			return err
+		}
+	}
 	w := csv.NewWriter(f)
 	for _, row := range sheet.Rows {
 		var record []string

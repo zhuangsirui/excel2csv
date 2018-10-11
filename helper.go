@@ -23,3 +23,5 @@ func roundFloat(value string) string {
 	}
 	return strconv.FormatFloat(f, 'f', -1, 64)
 }
+
+var bomBytes = []byte{0xEF, 0xBB, 0xBF}

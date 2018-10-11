@@ -59,18 +59,17 @@ func convertExcelTo(filePath, outputDir string) error {
 func convertSheetTo(sheet *xlsx.Sheet, outputDir string) error {
 	csvName := sheet.Name + ".csv"
 	csvPath := filepath.Join(outputDir, csvName)
-	os.Remove(csvPath)
-	log.Printf("convert %s into %s", sheet.Name, csvPath)
-	f, err := os.OpenFile(csvPath, os.O_RDWR|os.O_CREATE, 0755)
+	f, err := os.OpenFile(csvPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
+	log.Printf("convert %s into %s", sheet.Name, csvPath)
 	w := csv.NewWriter(f)
 	for _, row := range sheet.Rows {
 		var record []string
 		for _, cell := range row.Cells {
-			record = append(record, cell.String())
+			record = append(record, roundFloat(cell.String()))
 		}
 		if err := w.Write(record); err != nil {
 			return err

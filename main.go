@@ -77,7 +77,7 @@ func convertExcelTo(filePath string) error {
 func convertSheetTo(sheet *xlsx.Sheet) error {
 	csvName := sheet.Name + ".csv"
 	csvPath := filepath.Join(output, csvName)
-	f, err := os.OpenFile(csvPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	f, err := os.OpenFile(csvPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0664)
 	if err != nil {
 		return err
 	}

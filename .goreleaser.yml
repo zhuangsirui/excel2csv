@@ -12,6 +12,7 @@ archive:
     windows: Windows
     386: i386
     amd64: x86_64
+    windows: Windows
 checksum:
   name_template: 'checksums.txt'
 snapshot:

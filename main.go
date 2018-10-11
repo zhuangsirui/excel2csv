@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/tealeg/xlsx"
 	"github.com/urfave/cli"
@@ -90,15 +91,15 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 	}
 	w := csv.NewWriter(f)
 	for _, row := range sheet.Rows {
-		var record []string
+		var records []string
 		for _, cell := range row.Cells {
+			record := cell.String()
 			if trimFloat {
-				record = append(record, roundFloat(cell.String()))
-			} else {
-				record = append(record, cell.String())
+				record = roundFloat(record)
 			}
+			records = append(records, strings.TrimSpace(record))
 		}
-		if err := w.Write(record); err != nil {
+		if err := w.Write(records); err != nil {
 			return err
 		}
 	}

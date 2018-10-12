@@ -26,7 +26,7 @@ func main() {
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
 	app.UsageText = "excel2csv [--output DIR] [--trim] [--trim-float] [--with-bom] file [file...]"
-	app.Version = "0.0.8"
+	app.Version = "0.0.9"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",

@@ -22,9 +22,9 @@ var bomBytes = []byte{0xEF, 0xBB, 0xBF}
 
 func boolStringToCharacter(b string) (result string) {
 	if b == "1" {
-		result = "true"
+		result = "TRUE"
 	} else {
-		result = "false"
+		result = "FALSE"
 	}
 	return
 }

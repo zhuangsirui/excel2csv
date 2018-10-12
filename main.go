@@ -19,6 +19,7 @@ var (
 	trimFloat   bool
 	withBom     bool
 	convertBool bool
+	fillCell    bool
 )
 
 func main() {
@@ -26,7 +27,7 @@ func main() {
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
 	app.UsageText = "excel2csv [--output DIR] [--trim] [--trim-float] [--with-bom] file [file...]"
-	app.Version = "0.0.9"
+	app.Version = "0.0.10"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",
@@ -38,6 +39,11 @@ func main() {
 			Name:        "trim",
 			Usage:       "trim value",
 			Destination: &trim,
+		},
+		cli.BoolFlag{
+			Name:        "fill-cell",
+			Usage:       "fill cell",
+			Destination: &fillCell,
 		},
 		cli.BoolFlag{
 			Name:        "trim-float",
@@ -103,6 +109,7 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 		}
 	}
 	w := csv.NewWriter(f)
+	var maxRecords int
 	for _, row := range sheet.Rows {
 		var records []string
 		for _, cell := range row.Cells {
@@ -117,6 +124,15 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 				record = strings.TrimSpace(record)
 			}
 			records = append(records, record)
+		}
+		if fillCell {
+			if count := len(records); count > maxRecords {
+				maxRecords = count
+			} else if dif := maxRecords - count; dif > 0 {
+				for i := 0; i < dif; i++ {
+					records = append(records, "")
+				}
+			}
 		}
 		if err := w.Write(records); err != nil {
 			return err

@@ -19,3 +19,12 @@ func roundFloat(value string) string {
 }
 
 var bomBytes = []byte{0xEF, 0xBB, 0xBF}
+
+func boolStringToCharacter(b string) (result string) {
+	if b == "1" {
+		result = "true"
+	} else {
+		result = "false"
+	}
+	return
+}

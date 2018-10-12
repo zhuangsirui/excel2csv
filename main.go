@@ -14,8 +14,11 @@ import (
 )
 
 var (
-	output                   string
-	trim, trimFloat, withBom bool
+	output      string
+	trim        bool
+	trimFloat   bool
+	withBom     bool
+	convertBool bool
 )
 
 func main() {
@@ -23,7 +26,7 @@ func main() {
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
 	app.UsageText = "excel2csv [--output DIR] [--trim] [--trim-float] [--with-bom] file [file...]"
-	app.Version = "0.0.7"
+	app.Version = "0.0.8"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",
@@ -40,6 +43,11 @@ func main() {
 			Name:        "trim-float",
 			Usage:       "try to parse string like 1.10000000000001 to 1.1",
 			Destination: &trimFloat,
+		},
+		cli.BoolFlag{
+			Name:        "convert-bool",
+			Usage:       "covert 0 1 to \"true\" \"false\"",
+			Destination: &convertBool,
 		},
 		cli.BoolFlag{
 			Name:        "with-bom",
@@ -99,6 +107,9 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 		var records []string
 		for _, cell := range row.Cells {
 			record := cell.String()
+			if convertBool && cell.Type() == xlsx.CellTypeBool {
+				record = boolStringToCharacter(cell.String())
+			}
 			if trimFloat {
 				record = roundFloat(record)
 			}

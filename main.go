@@ -14,22 +14,27 @@ import (
 )
 
 var (
-	output             string
-	trimFloat, withBom bool
+	output                   string
+	trim, trimFloat, withBom bool
 )
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
-	app.UsageText = "excel2csv [--output DIR] [--trim-float] file [file...]"
-	app.Version = "0.0.2"
+	app.UsageText = "excel2csv [--output DIR] [--trim] [--trim-float] [--with-bom] file [file...]"
+	app.Version = "0.0.7"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",
 			Value:       ".",
 			Usage:       "target directory for output csv",
 			Destination: &output,
+		},
+		cli.BoolFlag{
+			Name:        "trim",
+			Usage:       "trim value",
+			Destination: &trim,
 		},
 		cli.BoolFlag{
 			Name:        "trim-float",
@@ -97,7 +102,10 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 			if trimFloat {
 				record = roundFloat(record)
 			}
-			records = append(records, strings.TrimSpace(record))
+			if trim {
+				record = strings.TrimSpace(record)
+			}
+			records = append(records, record)
 		}
 		if err := w.Write(records); err != nil {
 			return err

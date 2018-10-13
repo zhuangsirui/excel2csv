@@ -27,7 +27,7 @@ func main() {
 	app.Name = "excel2csv"
 	app.Usage = "convert excel each sheets to a single csv"
 	app.UsageText = "excel2csv [--output DIR] [--trim] [--trim-float] [--with-bom] file [file...]"
-	app.Version = "0.0.10"
+	app.Version = "0.0.11"
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "output, o",
@@ -109,6 +109,7 @@ func convertSheetTo(sheet *xlsx.Sheet) error {
 		}
 	}
 	w := csv.NewWriter(f)
+	w.UseCRLF = false
 	var maxRecords int
 	for _, row := range sheet.Rows {
 		var records []string
